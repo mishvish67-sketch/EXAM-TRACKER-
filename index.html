@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NEET UG Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white p-4">
+    <div id="app" class="max-w-md mx-auto">
+        <h1 class="text-2xl font-bold">NEET UG Tracker</h1>
+        <div id="ad-container" class="mt-4 p-4 bg-gray-800 rounded">
+            <!-- यहाँ एड्स लोड होंगे -->
+            Loading Ads...
+        </div>
+    </div>
+    <script>
+        // बैकएंड से एड्स फेच करना
+        fetch('/api/config')
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('ad-container').innerHTML = `<p>AD ID: ${data.adId}</p>`;
+        });
+    </script>
+</body>
+</html>
