@@ -1,113 +1,644 @@
-<!DOCTYPE html>
-<html lang="hi">
+<!D<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>NEET & Exam Tracker - PW Style</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <style>
-    /* Strict Lock Screen Container - Zero Vertical Scroll Drift */
-    html, body {
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-      touch-action: manipulation;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Let's Study - Tracker App</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    /* Animated Ambient Gradient */
-    body {
-      background: linear-gradient(-45deg, #fae8ff, #fce7f3, #ffe4e6, #fff7ed);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    /* Light Glassmorphism Boxes */
-    .glass-card {
-      background: rgba(255, 255, 255, 0.78);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      box-shadow: 0 8px 24px -4px rgba(236, 72, 153, 0.12);
-    }
-    .glass-nav {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.6);
-    }
+    <!-- ========================================== -->
+    <!-- OWNER: PASTE GOOGLE ADSENSE HEAD SCRIPT HERE -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXX"></script> -->
+    <!-- ========================================== -->
 
-    /* App Fixed View Engine */
-    .app-view {
-      display: none;
-      height: 100%;
-      width: 100%;
-      flex-direction: column;
-    }
-    .app-view.active {
-      display: flex;
-    }
-  </style>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark background for desktop to highlight mobile view */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Mobile App Container */
+        #app-container {
+            width: 100vw;
+            height: 100vh;
+            max-width: 430px; /* iPhone Pro Max width */
+            background: linear-gradient(135deg, #fae8ff 0%, #fce7f3 50%, #ffe4e6 100%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* View Engine */
+        .app-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 50px); /* Leave space for bottom ad */
+            overflow-y: auto;
+            overflow-x: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateX(20px);
+            padding-bottom: 20px;
+        }
+
+        .app-view.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+        }
+
+        /* Hide scrollbar */
+        .app-view::-webkit-scrollbar { display: none; }
+        .app-view { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Glassmorphism Classes */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(236, 72, 153, 0.1);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Custom Checkbox */
+        .task-checkbox:checked + div {
+            background-color: #ec4899;
+            border-color: #ec4899;
+        }
+        
+        .task-checkbox:checked + div svg {
+            display: block;
+        }
+
+        /* Bottom Ad Banner */
+        #bottom-ad {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50px;
+            background: #ffffff;
+            z-index: 40;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 1px solid #e5e7eb;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+    </style>
 </head>
-<body class="text-slate-800 antialiased flex flex-col justify-between select-none">
+<body>
 
-  <!-- APP CONTAINER -->
-  <div id="app" class="max-w-md mx-auto w-full h-screen flex flex-col relative overflow-hidden bg-white/30">
-
-    <!-- 1. LANDING SCREEN -->
-    <section id="view-landing" class="app-view active p-6 justify-between text-center">
-      <div class="my-auto space-y-6">
-        <div class="relative w-28 h-28 mx-auto flex items-center justify-center rounded-3xl bg-gradient-to-tr from-purple-600 via-pink-500 to-orange-400 p-1 shadow-xl">
-          <div class="w-full h-full bg-white rounded-[22px] flex items-center justify-center">
-            <i data-lucide="graduation-cap" class="w-14 h-14 text-pink-600"></i>
-          </div>
-        </div>
+    <div id="app-container">
         
-        <div>
-          <h1 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-purple-700 via-pink-600 to-orange-500 bg-clip-text text-transparent">
-            NEET & Exam Tracker
-          </h1>
-          <p class="text-xs font-semibold text-slate-500 mt-1">Target Tracking & Performance Analytics Engine</p>
+        <!-- ================= VIEW 1: LANDING & ONBOARDING ================= -->
+        <div id="view-landing" class="app-view active p-6 flex flex-col justify-center h-full">
+            <div class="text-center mb-8">
+                <div class="inline-block p-4 bg-white rounded-full shadow-lg mb-4 text-pink-500">
+                    <i data-lucide="book-open-check" class="w-12 h-12"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Let's Study</h1>
+                <p class="text-sm text-gray-500 mt-2">Zero-Friction Exam Tracker</p>
+                
+                <!-- Fake Social Proof -->
+                <div class="flex items-center justify-center gap-4 mt-4 glass-card rounded-full py-2 px-4 mx-auto w-max">
+                    <div class="flex items-center text-yellow-500 text-sm font-bold">
+                        ★ 4.9 <span class="text-gray-400 text-xs ml-1 font-normal">(12K+ Reviews)</span>
+                    </div>
+                    <div class="w-px h-4 bg-gray-300"></div>
+                    <div class="text-sm font-bold text-gray-700">
+                        100K+ <span class="text-gray-400 text-xs font-normal">Downloads</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Highlights -->
+            <div class="space-y-3 mb-8 px-2">
+                <div class="flex items-center gap-3 text-sm text-gray-700">
+                    <i data-lucide="zap" class="w-5 h-5 text-pink-500"></i> Direct Group Entry (No Menus)
+                </div>
+                <div class="flex items-center gap-3 text-sm text-gray-700">
+                    <i data-lucide="target" class="w-5 h-5 text-pink-500"></i> Subject-wise Focus Timer
+                </div>
+                <div class="flex items-center gap-3 text-sm text-gray-700">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5 text-pink-500"></i> Daily AI Scorecard
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6" id="auth-section">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 text-center">Join the Community</h2>
+                <!-- Google Login Simulation -->
+                <button onclick="simulateGoogleLogin()" class="w-full py-3 bg-white border border-gray-200 text-gray-700 font-bold rounded-xl shadow-sm hover:bg-gray-50 active:scale-95 transition-all flex justify-center items-center gap-3 mb-4">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    Continue with Google
+                </button>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6 hidden" id="setup-section">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">Complete Profile</h2>
+                <input type="text" id="user-name" placeholder="Enter Full Name" class="w-full px-4 py-3 rounded-xl bg-white/80 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 mb-4 transition-all">
+                
+                <select id="user-goal" class="w-full px-4 py-3 rounded-xl bg-white/80 border border-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-400 mb-4">
+                    <option value="" disabled selected>Select Target Exam</option>
+                    <option value="NEET 2027">NEET 2027 (UG)</option>
+                    <option value="JEE Main/Adv">JEE Main / Adv</option>
+                    <option value="Class 12 Boards">Class 12 Boards</option>
+                    <option value="CA Foundation">CA Foundation</option>
+                </select>
+
+                <button onclick="startApp()" class="w-full py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold rounded-xl shadow-lg transform active:scale-95 transition-all flex justify-center items-center gap-2">
+                    Let's Study <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </div>
         </div>
 
-        <div class="glass-card p-6 rounded-3xl space-y-4">
-          <h2 class="text-xl font-bold text-slate-800">Let's Study, Let's Track Your Study!</h2>
-          <p class="text-xs text-slate-600 leading-relaxed">
-            डेली टारगेट्स, टाइमर और नाइटी परफॉर्मेंस रिपोर्ट कार्ड के साथ अपनी परीक्षा की तैयारी को फिक्स और बेहतर बनाएं।
-          </p>
-          
-          <button onclick="handleStartStudying()" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold shadow-lg shadow-pink-500/25 hover:opacity-95 transition-all flex items-center justify-center gap-2">
-            <span>Let's Study</span>
-            <i data-lucide="arrow-right" class="w-5 h-5"></i>
-          </button>
+        <!-- ================= VIEW 2: DASHBOARD (Not in group) ================= -->
+        <div id="view-dashboard" class="app-view p-6 flex flex-col items-center justify-center h-full">
+            <div class="glass-card w-full rounded-3xl p-8 text-center shadow-xl">
+                <div class="w-20 h-20 bg-gradient-to-tr from-pink-400 to-rose-400 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold shadow-lg mb-4" id="avatar-initial">
+                    S
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800" id="dash-name">Student Name</h2>
+                <p class="text-pink-600 font-semibold text-sm mt-1" id="dash-goal">Target: NEET</p>
+                
+                <div class="mt-8">
+                    <button onclick="enterGroupSimulate()" class="w-full py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xl font-bold rounded-2xl shadow-lg shadow-pink-500/30 transform active:scale-95 transition-all flex flex-col items-center justify-center gap-1 relative overflow-hidden group">
+                        <span class="relative z-10 flex items-center gap-2">LET'S STUDY <i data-lucide="play" class="w-6 h-6 fill-current"></i></span>
+                        <span class="text-xs font-normal opacity-80 relative z-10">Enter Active Group</span>
+                        <div class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-active:translate-x-full transition-transform duration-500"></div>
+                    </button>
+                </div>
+                
+                <button onclick="resetApp()" class="mt-6 text-xs text-gray-400 underline">Reset Account (Log out)</button>
+            </div>
         </div>
-      </div>
 
-      <div class="space-y-3 pb-8">
-        <button onclick="alert('APK Download Triggered!')" class="w-full py-3 px-4 rounded-xl glass-card text-xs font-semibold text-slate-700 flex items-center justify-center gap-2">
-          <i data-lucide="download" class="w-4 h-4 text-pink-600"></i>
-          <span>Download Application (.APK)</span>
-        </button>
-      </div>
-    </section>
+        <!-- ================= VIEW 3: ACTIVE GROUP (STUDY / ADMIN) ================= -->
+        <div id="view-group" class="app-view">
+            <!-- Glass Navbar -->
+            <div class="glass-nav sticky top-0 z-20 px-4 py-3 flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-gray-800 leading-tight">Target Alpha Group</h3>
+                    <p class="text-[10px] text-green-500 font-bold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> 4 Members Online</p>
+                </div>
+                
+                <!-- Role Toggle for Admin -->
+                <select id="role-toggle" onchange="toggleAdminMode()" class="text-xs bg-white border border-gray-200 rounded-lg px-2 py-1 font-semibold text-pink-600 focus:outline-none shadow-sm">
+                    <option value="study">Self Study</option>
+                    <option value="admin">Admin Mode</option>
+                </select>
+            </div>
 
-    <!-- 2. ONBOARDING & EXAM SELECTION SETUP -->
-    <section id="view-onboarding" class="app-view p-6 justify-center">
-      <div class="glass-card p-6 rounded-3xl space-y-5">
-        <div class="text-center space-y-1">
-          <h2 class="text-2xl font-bold text-slate-800">Setup Profile & Goal</h2>
-          <p class="text-xs text-slate-500">अपना लक्ष्य चुनें ताकि सही रिपोर्ट जेनरेट हो सके।</p>
+            <div class="p-4 space-y-4">
+                <!-- ============ SELF STUDY MODE ============ -->
+                <div id="self-study-section" class="space-y-4">
+                    
+                    <!-- Progress Card -->
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-sm font-bold text-gray-700">Daily Targets</span>
+                            <span class="text-2xl font-bold text-pink-600" id="progress-text">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                            <div id="progress-bar" class="bg-gradient-to-r from-pink-400 to-rose-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Focus Timer -->
+                    <div class="glass-card rounded-2xl p-5 text-center">
+                        <div class="flex justify-center gap-2 mb-3">
+                            <span class="px-2 py-1 bg-pink-100 text-pink-700 text-xs rounded-md font-bold cursor-pointer" onclick="setSubject('Physics')">PHY</span>
+                            <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-md font-bold cursor-pointer" onclick="setSubject('Chemistry')">CHEM</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-md font-bold cursor-pointer" onclick="setSubject('Bio/Math')">BIO/MATH</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-1" id="active-subject">Subject: Not Selected</p>
+                        <div class="text-5xl font-bold text-gray-800 tracking-wider font-mono mb-4" id="timer-display">00:00:00</div>
+                        <div class="flex justify-center gap-3">
+                            <button id="btn-timer" onclick="toggleTimer()" class="bg-gray-900 text-white px-6 py-2 rounded-full font-bold shadow-md flex items-center gap-2 active:scale-95 transition-transform">
+                                <i data-lucide="play" class="w-4 h-4"></i> Start
+                            </button>
+                            <button onclick="resetTimer()" class="bg-white text-gray-700 border border-gray-200 px-4 py-2 rounded-full font-bold shadow-sm active:scale-95 transition-transform">
+                                <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- To-Do List -->
+                    <div class="glass-card rounded-2xl p-4">
+                        <h4 class="font-bold text-gray-800 mb-3 text-sm flex items-center gap-2">
+                            <i data-lucide="list-checks" class="w-4 h-4 text-pink-500"></i> Action Plan
+                        </h4>
+                        <div id="task-list" class="space-y-2">
+                            <!-- Tasks injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Group Discussion & Sponsored Messages -->
+                    <div class="glass-card rounded-2xl p-4 pb-6">
+                        <h4 class="font-bold text-gray-800 mb-3 text-sm flex items-center gap-2">
+                            <i data-lucide="message-circle" class="w-4 h-4 text-pink-500"></i> Group Doubts
+                        </h4>
+                        <div class="bg-white/50 rounded-xl p-3 h-40 overflow-y-auto mb-2 text-sm flex flex-col gap-2">
+                            
+                            <!-- Normal Chat -->
+                            <div class="bg-white p-2 rounded-lg rounded-tl-none shadow-sm w-[85%]">
+                                <span class="text-[10px] font-bold text-pink-600 block">Rahul</span>
+                                Anyone completed the Thermodynamics mock test?
+                            </div>
+                            
+                            <!-- OWNER/ADMIN SPONSORED AD MESSAGE -->
+                            <div class="bg-yellow-50 border border-yellow-200 p-2 rounded-lg shadow-sm w-full relative">
+                                <span class="absolute top-1 right-2 text-[8px] bg-yellow-200 text-yellow-800 px-1 rounded font-bold">AD / SPONSOR</span>
+                                <span class="text-[10px] font-bold text-yellow-700 block flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3"></i> Admin Broadcast</span>
+                                <p class="text-xs text-gray-700 mt-1">Get 50% Off on Premium Test Series today! Use code STUDY50. <a href="#" class="text-blue-500 underline font-bold">Claim Now</a></p>
+                            </div>
+
+                            <!-- User Chat -->
+                            <div class="bg-pink-50 p-2 rounded-lg rounded-tr-none shadow-sm w-[85%] self-end mt-1">
+                                <span class="text-[10px] font-bold text-gray-600 block">You</span>
+                                Doing it right now!
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Type a message..." class="w-full bg-white border border-pink-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-pink-300">
+                            <button class="bg-pink-500 text-white p-2 rounded-full active:scale-95"><i data-lucide="send" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ============ ADMIN MODE ============ -->
+                <div id="admin-mode-section" class="hidden space-y-4">
+                    <div class="glass-card rounded-2xl p-5 text-center bg-gradient-to-b from-purple-50 to-white border-purple-100">
+                        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full mx-auto flex items-center justify-center mb-2 shadow-inner">
+                            <i data-lucide="shield-check" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800 text-lg">Admin Control Room</h3>
+                        <p class="text-xs text-gray-500 mb-6">Manage group analytics and send broadcasts.</p>
+                        
+                        <div class="grid grid-cols-2 gap-3 mb-6">
+                            <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100">
+                                <p class="text-[10px] text-gray-500 uppercase font-bold">Total Hours</p>
+                                <p class="text-xl font-bold text-gray-800">42.5h</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100">
+                                <p class="text-[10px] text-gray-500 uppercase font-bold">Avg Accuracy</p>
+                                <p class="text-xl font-bold text-green-500">86%</p>
+                            </div>
+                        </div>
+
+                        <!-- Add/Sponsor push button (UI only for simulation) -->
+                        <button class="w-full py-2 mb-3 bg-yellow-100 text-yellow-700 font-bold rounded-xl border border-yellow-200 active:scale-95 transition-all text-sm flex justify-center items-center gap-2">
+                            <i data-lucide="megaphone" class="w-4 h-4"></i> Push Sponsor Ad to Chat
+                        </button>
+
+                        <button onclick="generateReport()" class="w-full py-3 bg-gray-900 text-white font-bold rounded-xl shadow-lg transform active:scale-95 transition-all flex justify-center items-center gap-2">
+                            <i data-lucide="file-bar-chart" class="w-5 h-5"></i> Generate Nightly Report
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Exit Group Lock -->
+                <button onclick="exitGroup()" class="w-full py-3 bg-red-50 text-red-500 font-bold rounded-xl border border-red-100 active:scale-95 transition-transform flex justify-center items-center gap-2 mt-4 text-sm shadow-sm">
+                    <i data-lucide="lock-open" class="w-4 h-4"></i> Exit Group Lock
+                </button>
+            </div>
         </div>
-        
+
+        <!-- ================= LOADING TRANSITION (Interstitial Ad Placeholder) ================= -->
+        <div id="view-loading" class="app-view bg-white/95 backdrop-blur-md z-30 flex flex-col items-center justify-center h-full">
+            <div class="animate-spin text-pink-500 mb-4">
+                <i data-lucide="loader-2" class="w-10 h-10"></i>
+            </div>
+            <h3 class="font-bold text-gray-800">Preparing Environment...</h3>
+            <p class="text-xs text-gray-500 mt-2">Loading Focus Session...</p>
+            
+            <!-- OWNER: INTERSTITIAL AD CAN GO HERE -->
+            <!-- <div class="mt-8 w-64 h-64 bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-sm">Ad Space (300x250)</div> -->
+        </div>
+
+        <!-- ================= REPORT MODAL (OVERLAY) ================= -->
+        <div id="report-modal" class="absolute inset-0 bg-black/60 z-50 hidden flex justify-center items-center p-4 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+            <div class="glass-card bg-white w-full max-w-sm rounded-3xl p-6 transform scale-95 transition-transform duration-300" id="report-card">
+                <div class="text-center">
+                    <div class="inline-block p-2 bg-green-100 text-green-600 rounded-full mb-2">
+                        <i data-lucide="award" class="w-8 h-8"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800">Nightly Scorecard</h2>
+                    <p class="text-xs text-gray-500 mb-4" id="report-date">Date</p>
+                    
+                    <div class="space-y-2 text-left mb-6">
+                        <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                            <span class="text-xs font-bold text-gray-600">Total Study Hours</span>
+                            <span class="text-sm font-bold text-pink-600">6h 45m</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                            <span class="text-xs font-bold text-gray-600">Task Completion</span>
+                            <span class="text-sm font-bold text-green-500" id="report-completion">85%</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                            <span class="text-xs font-bold text-gray-600">Performance Grade</span>
+                            <span class="text-sm font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded">EXCELLENT</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg border border-pink-100">
+                            <span class="text-xs font-bold text-gray-600">Target Countdown</span>
+                            <span class="text-sm font-bold text-red-500">184 Days Left</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-pink-50 p-3 rounded-xl border border-pink-100 mb-6 text-left">
+                        <p class="text-[10px] font-bold text-pink-500 uppercase">Admin Feedback</p>
+                        <p class="text-xs text-gray-700 italic">"Great focus today team! Keep pushing the limits. Physics targets were hit perfectly."</p>
+                    </div>
+
+                    <button onclick="closeReport()" class="w-full py-3 bg-gray-900 text-white font-bold rounded-xl shadow-lg active:scale-95 transition-transform flex justify-center items-center gap-2">
+                        <i data-lucide="share-2" class="w-4 h-4"></i> Close & Share
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PERMANENT BOTTOM AD BANNER ================= -->
+        <div id="bottom-ad">
+            <!-- OWNER: PASTE ADSENSE/ADSTERRA BANNER SCRIPT HERE (Size 320x50) -->
+            <span class="flex items-center gap-2">
+                <i data-lucide="badge-ad" class="w-4 h-4"></i> 
+                Advertisement Space (320x50)
+            </span>
+        </div>
+
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // --- State Management ---
+        let appState = JSON.parse(localStorage.getItem('studyApp')) || {
+            name: '',
+            goal: '',
+            inGroup: false,
+            isAdmin: true // Default true so you (owner) can test admin features
+        };
+
+        let tasks = [
+            { id: 1, text: "Revise Thermodynamics Formulas", completed: false },
+            { id: 2, text: "Solve 50 MCQ Biology", completed: false },
+            { id: 3, text: "Read NCERT Chemistry Ch-4", completed: false },
+            { id: 4, text: "Give Chapterwise Mock Test", completed: false }
+        ];
+
+        let timerInterval;
+        let timerSeconds = 0;
+        let isTimerRunning = false;
+        let currentSubject = 'None';
+        let currentPercent = 0;
+
+        // --- View Engine ---
+        function showView(viewId) {
+            document.querySelectorAll('.app-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            document.getElementById(viewId).classList.add('active');
+            lucide.createIcons();
+        }
+
+        // --- Initialization ---
+        window.onload = () => {
+            if (appState.name && appState.goal) {
+                // Populate Dashboard
+                document.getElementById('dash-name').innerText = appState.name;
+                document.getElementById('dash-goal').innerText = "Target: " + appState.goal;
+                document.getElementById('avatar-initial').innerText = appState.name.charAt(0).toUpperCase();
+                
+                // Zero-Friction Flow
+                if(appState.inGroup) {
+                    initGroupView();
+                    showView('view-group');
+                } else {
+                    showView('view-dashboard');
+                }
+            } else {
+                showView('view-landing');
+            }
+        };
+
+        // --- Auth Flow ---
+        function simulateGoogleLogin() {
+            const authBtn = document.getElementById('auth-section');
+            const setupForm = document.getElementById('setup-section');
+            
+            authBtn.innerHTML = `<div class="flex justify-center"><i data-lucide="loader-2" class="w-6 h-6 text-pink-500 animate-spin"></i></div>`;
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                authBtn.classList.add('hidden');
+                setupForm.classList.remove('hidden');
+            }, 800);
+        }
+
+        function startApp() {
+            const name = document.getElementById('user-name').value.trim();
+            const goal = document.getElementById('user-goal').value;
+            
+            if(!name || !goal) {
+                alert("Please enter Name and Select Goal to continue!");
+                return;
+            }
+
+            appState.name = name;
+            appState.goal = goal;
+            localStorage.setItem('studyApp', JSON.stringify(appState));
+            window.onload();
+        }
+
+        function resetApp() {
+            localStorage.removeItem('studyApp');
+            location.reload();
+        }
+
+        // --- Group Flow ---
+        function enterGroupSimulate() {
+            showView('view-loading');
+            
+            // Simulates Network Call / Interstitial Ad Time
+            setTimeout(() => {
+                appState.inGroup = true;
+                localStorage.setItem('studyApp', JSON.stringify(appState));
+                initGroupView();
+                showView('view-group');
+            }, 1500);
+        }
+
+        function exitGroup() {
+            if(confirm("Exit locked group? Timer will pause.")) {
+                // FIX: Pause timer on exit
+                if(isTimerRunning) {
+                    toggleTimer();
+                }
+                appState.inGroup = false;
+                localStorage.setItem('studyApp', JSON.stringify(appState));
+                showView('view-dashboard');
+            }
+        }
+
+        // --- Study Mode Logic ---
+        function initGroupView() {
+            const roleSelect = document.getElementById('role-toggle');
+            if (appState.isAdmin) {
+                roleSelect.style.display = 'block';
+                roleSelect.value = 'study';
+                toggleAdminMode();
+            } else {
+                roleSelect.style.display = 'none';
+            }
+            renderTasks();
+        }
+
+        function toggleAdminMode() {
+            const mode = document.getElementById('role-toggle').value;
+            if(mode === 'admin') {
+                document.getElementById('self-study-section').classList.add('hidden');
+                document.getElementById('admin-mode-section').classList.remove('hidden');
+            } else {
+                document.getElementById('admin-mode-section').classList.add('hidden');
+                document.getElementById('self-study-section').classList.remove('hidden');
+            }
+        }
+
+        // --- Task System ---
+        function renderTasks() {
+            const list = document.getElementById('task-list');
+            list.innerHTML = '';
+            let completedCount = 0;
+
+            tasks.forEach((task, index) => {
+                if(task.completed) completedCount++;
+                list.innerHTML += `
+                    <label class="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors shadow-sm">
+                        <div class="relative flex items-center">
+                            <input type="checkbox" class="task-checkbox peer sr-only" ${task.completed ? 'checked' : ''} onchange="toggleTask(${index})">
+                            <div class="w-5 h-5 border-2 border-gray-300 rounded transition-colors flex items-center justify-center bg-white peer-checked:bg-pink-500 peer-checked:border-pink-500">
+                                <svg class="w-3 h-3 text-white ${task.completed ? 'block' : 'hidden'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                        </div>
+                        <span class="text-sm font-medium transition-all ${task.completed ? 'text-gray-400 line-through' : 'text-gray-700'}">${task.text}</span>
+                    </label>
+                `;
+            });
+
+            currentPercent = Math.round((completedCount / tasks.length) * 100);
+            document.getElementById('progress-bar').style.width = currentPercent + '%';
+            document.getElementById('progress-text').innerText = currentPercent + '%';
+        }
+
+        function toggleTask(index) {
+            tasks[index].completed = !tasks[index].completed;
+            renderTasks();
+        }
+
+        // --- Timer System ---
+        function setSubject(sub) {
+            currentSubject = sub;
+            document.getElementById('active-subject').innerText = "Subject: " + sub;
+        }
+
+        function formatTime(sec) {
+            let h = Math.floor(sec / 3600);
+            let m = Math.floor((sec % 3600) / 60);
+            let s = sec % 60;
+            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('btn-timer');
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> Resume`;
+                btn.classList.replace('bg-pink-600', 'bg-gray-900');
+            } else {
+                if(currentSubject === 'None') alert("Pro Tip: Select a subject for better tracking!");
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    document.getElementById('timer-display').innerText = formatTime(timerSeconds);
+                }, 1000);
+                btn.innerHTML = `<i data-lucide="pause" class="w-4 h-4"></i> Pause`;
+                btn.classList.replace('bg-gray-900', 'bg-pink-600');
+            }
+            isTimerRunning = !isTimerRunning;
+            lucide.createIcons();
+        }
+
+        function resetTimer() {
+            if(confirm("Reset current timer?")) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                timerSeconds = 0;
+                document.getElementById('timer-display').innerText = "00:00:00";
+                const btn = document.getElementById('btn-timer');
+                btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> Start`;
+                btn.classList.replace('bg-pink-600', 'bg-gray-900');
+                lucide.createIcons();
+            }
+        }
+
+        // --- Admin Report ---
+        function generateReport() {
+            const modal = document.getElementById('report-modal');
+            const card = document.getElementById('report-card');
+            
+            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+            document.getElementById('report-date').innerText = new Date().toLocaleDateString('en-US', options);
+            document.getElementById('report-completion').innerText = currentPercent + '%';
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                card.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeReport() {
+            const modal = document.getElementById('report-modal');
+            const card = document.getElementById('report-card');
+            
+            modal.classList.add('opacity-0');
+            card.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById('role-toggle').value = 'study';
+                toggleAdminMode(); 
+            }, 300);
+        }
+    </script>
+</body>
+</html>
+
         <div class="space-y-4">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">आपका नाम (Full Name)</label>
