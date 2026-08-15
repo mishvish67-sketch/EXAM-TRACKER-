@@ -2,8 +2,8 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NEET Tracker - PW Style</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>NEET & Exam Tracker - PW Style</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -11,13 +11,20 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <style>
-    /* Animated Gradient Background */
+    /* Strict Lock Screen Container - Zero Vertical Scroll Drift */
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    /* Animated Ambient Gradient */
     body {
       background: linear-gradient(-45deg, #fae8ff, #fce7f3, #ffe4e6, #fff7ed);
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
@@ -25,62 +32,40 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Light Glassmorphism Utility */
+    /* Light Glassmorphism Boxes */
     .glass-card {
-      background: rgba(255, 255, 255, 0.65);
+      background: rgba(255, 255, 255, 0.78);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      box-shadow: 0 8px 32px 0 rgba(236, 72, 153, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 8px 24px -4px rgba(236, 72, 153, 0.12);
     }
     .glass-nav {
-      background: rgba(255, 255, 255, 0.75);
+      background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.6);
     }
-    
-    /* View Transitions */
+
+    /* App Fixed View Engine */
     .app-view {
       display: none;
-      opacity: 0;
-      transition: opacity 0.25s ease-in-out;
+      height: 100%;
+      width: 100%;
+      flex-direction: column;
     }
     .app-view.active {
-      display: block;
-      opacity: 1;
+      display: flex;
     }
   </style>
 </head>
-<body class="text-slate-800 antialiased flex flex-col min-h-screen">
-
-  <!-- ================= MONETIZATION CONFIG ================= -->
-  <script>
-    const CONFIG = {
-      appName: "NEET Tracker",
-      adsEnabled: true,
-      // अपने एड नेटवर्क (AdSense/Propeller/etc.) का टोकन या स्क्रिप्ट यहाँ डालें
-      adBannerScript: "<!-- BANNER_AD_SCRIPT_HERE -->",
-      adInterstitialScript: "<!-- INTERSTITIAL_AD_SCRIPT_HERE -->",
-      openCountForAd: 5
-    };
-
-    // Track app launches for Ads
-    let appLaunchCount = parseInt(localStorage.getItem('appLaunchCount') || '0') + 1;
-    localStorage.setItem('appLaunchCount', appLaunchCount);
-    
-    if (CONFIG.adsEnabled && appLaunchCount >= CONFIG.openCountForAd) {
-      console.log("Triggering Interstitial Ad for repeat user...");
-      // Interstitial Ad Trigger logic goes here
-    }
-  </script>
+<body class="text-slate-800 antialiased flex flex-col justify-between select-none">
 
   <!-- APP CONTAINER -->
-  <div id="app" class="max-w-md mx-auto w-full flex-1 flex flex-col relative pb-16">
+  <div id="app" class="max-w-md mx-auto w-full h-screen flex flex-col relative overflow-hidden bg-white/30">
 
     <!-- 1. LANDING SCREEN -->
-    <section id="view-landing" class="app-view active flex-1 flex flex-col justify-between p-6 text-center">
+    <section id="view-landing" class="app-view active p-6 justify-between text-center">
       <div class="my-auto space-y-6">
-        <!-- Educational Logo -->
         <div class="relative w-28 h-28 mx-auto flex items-center justify-center rounded-3xl bg-gradient-to-tr from-purple-600 via-pink-500 to-orange-400 p-1 shadow-xl">
           <div class="w-full h-full bg-white rounded-[22px] flex items-center justify-center">
             <i data-lucide="graduation-cap" class="w-14 h-14 text-pink-600"></i>
@@ -89,15 +74,15 @@
         
         <div>
           <h1 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-purple-700 via-pink-600 to-orange-500 bg-clip-text text-transparent">
-            NEET Tracker
+            NEET & Exam Tracker
           </h1>
-          <p class="text-sm font-medium text-slate-500 mt-1">PW Style Study & Target Manager</p>
+          <p class="text-xs font-semibold text-slate-500 mt-1">Target Tracking & Performance Analytics Engine</p>
         </div>
 
-        <div class="glass-card p-6 rounded-3xl space-y-4 shadow-sm border">
+        <div class="glass-card p-6 rounded-3xl space-y-4">
           <h2 class="text-xl font-bold text-slate-800">Let's Study, Let's Track Your Study!</h2>
-          <p class="text-xs text-slate-500 leading-relaxed">
-            अपने दोस्तों के साथ ग्रुप बनाएं, डेली टारगेट्स पूरे करें और एडमिन एनालिटिक्स से अपनी NEET की तैयारी को नेक्स्ट लेवल पर ले जाएं।
+          <p class="text-xs text-slate-600 leading-relaxed">
+            डेली टारगेट्स, टाइमर और नाइटी परफॉर्मेंस रिपोर्ट कार्ड के साथ अपनी परीक्षा की तैयारी को फिक्स और बेहतर बनाएं।
           </p>
           
           <button onclick="handleStartStudying()" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold shadow-lg shadow-pink-500/25 hover:opacity-95 transition-all flex items-center justify-center gap-2">
@@ -107,276 +92,305 @@
         </div>
       </div>
 
-      <!-- APK & PWA Download Options -->
-      <div class="space-y-3 pt-4">
-        <button onclick="downloadAPK()" class="w-full py-3 px-4 rounded-xl glass-card text-xs font-semibold text-slate-700 flex items-center justify-center gap-2 hover:bg-white/80 border">
+      <div class="space-y-3 pb-8">
+        <button onclick="alert('APK Download Triggered!')" class="w-full py-3 px-4 rounded-xl glass-card text-xs font-semibold text-slate-700 flex items-center justify-center gap-2">
           <i data-lucide="download" class="w-4 h-4 text-pink-600"></i>
           <span>Download Application (.APK)</span>
-        </button>
-        <button onclick="addToHomeScreen()" class="text-xs text-purple-600 font-medium hover:underline flex items-center justify-center gap-1 mx-auto">
-          <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
-          <span>Add to Home Screen</span>
         </button>
       </div>
     </section>
 
-    <!-- 2. USER REGISTRATION (ONBOARDING) -->
-    <section id="view-onboarding" class="app-view p-6 my-auto">
-      <div class="glass-card p-6 rounded-3xl space-y-6">
+    <!-- 2. ONBOARDING & EXAM SELECTION SETUP -->
+    <section id="view-onboarding" class="app-view p-6 justify-center">
+      <div class="glass-card p-6 rounded-3xl space-y-5">
         <div class="text-center space-y-1">
-          <h2 class="text-2xl font-bold text-slate-800">Welcome Aspirant!</h2>
-          <p class="text-xs text-slate-500">अपना नाम डालें। यह एक बार का सेटअप है।</p>
+          <h2 class="text-2xl font-bold text-slate-800">Setup Profile & Goal</h2>
+          <p class="text-xs text-slate-500">अपना लक्ष्य चुनें ताकि सही रिपोर्ट जेनरेट हो सके।</p>
         </div>
         
         <div class="space-y-4">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">आपका नाम (Full Name)</label>
-            <input type="text" id="input-user-name" placeholder="Ex. Rahul Kumar" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white/70 text-sm"/>
+            <input type="text" id="input-user-name" placeholder="Ex. Rahul Kumar" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white/80 text-sm"/>
           </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Target Exam / Goal</label>
+            <select id="select-user-goal" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white/80 text-sm font-medium">
+              <option value="NEET 2027">NEET 2027 Aspirant</option>
+              <option value="JEE Main/Adv">JEE Main & Advanced</option>
+              <option value="Class 11">Class 11 Board + Prep</option>
+              <option value="Class 12">Class 12 Board + Prep</option>
+              <option value="CA Foundation">CA Foundation</option>
+            </select>
+          </div>
+
           <button onclick="registerUser()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold text-sm shadow-md">
-            Setup My Account
+            Save Profile & Continue
           </button>
         </div>
       </div>
     </section>
 
-    <!-- 3. DASHBOARD MAIN (Group Select) -->
-    <section id="view-dashboard" class="app-view flex-1 flex flex-col">
-      <!-- Top Header -->
-      <header class="glass-nav sticky top-0 z-10 px-6 py-4 flex items-center justify-between">
+    <!-- 3. MAIN DASHBOARD (STUDENT / ADMIN PERSISTENT SCREEN) -->
+    <section id="view-dashboard" class="app-view">
+      <header class="glass-nav px-5 py-3 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm shadow-sm" id="user-avatar">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm shadow-md" id="user-avatar">
             U
           </div>
           <div>
-            <h3 class="font-bold text-slate-800 text-sm leading-tight" id="display-user-name">User Name</h3>
-            <span class="text-[10px] text-slate-500 font-mono" id="display-user-id">ID: NEET-0000</span>
+            <h3 class="font-bold text-slate-800 text-sm" id="display-user-name">User Name</h3>
+            <span class="text-[10px] text-pink-600 font-bold block" id="display-user-goal">Goal: NEET 2027</span>
           </div>
         </div>
-        <button onclick="openTimerPage()" class="p-2.5 rounded-xl glass-card text-purple-600 hover:bg-white flex items-center gap-1.5 text-xs font-semibold">
-          <i data-lucide="timer" class="w-4 h-4 text-pink-500"></i>
-          <span>Timer</span>
+
+        <button onclick="openTimerPage()" class="px-3 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-white flex items-center gap-1.5 text-xs font-semibold shadow-md">
+          <i data-lucide="timer" class="w-4 h-4"></i>
+          <span>Study Timer</span>
         </button>
       </header>
 
-      <main class="p-6 space-y-6 flex-1">
-        <!-- Main Actions -->
-        <div class="grid grid-cols-2 gap-4">
-          <button onclick="showCreateGroupModal()" class="glass-card p-5 rounded-2xl flex flex-col items-center text-center gap-3 hover:border-pink-300 transition-all group">
-            <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-              <i data-lucide="plus" class="w-6 h-6"></i>
-            </div>
-            <div>
-              <span class="block font-bold text-sm text-slate-800">Create Group</span>
-              <span class="text-[10px] text-slate-500">फॉर एडमिन/लीडर</span>
-            </div>
-          </button>
+      <main class="flex-1 p-4 space-y-4 overflow-y-auto">
+        <!-- Live Countdown & Overview Header -->
+        <div class="glass-card p-4 rounded-2xl flex justify-between items-center bg-gradient-to-r from-purple-900/5 to-pink-900/5">
+          <div>
+            <span class="text-[9px] uppercase tracking-wider text-slate-500 font-bold block">Exam Countdown</span>
+            <span class="text-sm font-extrabold text-purple-700" id="dash-exam-countdown">265 Days Remaining</span>
+          </div>
+          <div class="h-8 w-[1px] bg-slate-200"></div>
+          <div>
+            <span class="text-[9px] uppercase tracking-wider text-slate-500 font-bold block">Today Progress</span>
+            <span class="text-sm font-extrabold text-pink-600" id="dash-daily-progress-percent">0% Completed</span>
+          </div>
+        </div>
 
-          <button onclick="showJoinGroupModal()" class="glass-card p-5 rounded-2xl flex flex-col items-center text-center gap-3 hover:border-pink-300 transition-all group">
-            <div class="w-12 h-12 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-              <i data-lucide="users" class="w-6 h-6"></i>
+        <!-- Group Selector Box (Shows ONLY when user has NO group) -->
+        <div id="no-group-actions" class="grid grid-cols-2 gap-3">
+          <button onclick="showCreateGroupModal()" class="glass-card p-4 rounded-2xl flex flex-col items-center text-center gap-2 hover:border-pink-300">
+            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center">
+              <i data-lucide="plus" class="w-5 h-5"></i>
             </div>
-            <div>
-              <span class="block font-bold text-sm text-slate-800">Join Group</span>
-              <span class="text-[10px] text-slate-500">10-अंकों कोड डालें</span>
+            <span class="font-bold text-xs text-slate-800">Create Group</span>
+          </button>
+          <button onclick="showJoinGroupModal()" class="glass-card p-4 rounded-2xl flex flex-col items-center text-center gap-2 hover:border-pink-300">
+            <div class="w-10 h-10 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center">
+              <i data-lucide="users" class="w-5 h-5"></i>
             </div>
+            <span class="font-bold text-xs text-slate-800">Join Group</span>
           </button>
         </div>
 
-        <!-- Active Group Display -->
-        <div id="active-group-card" class="hidden glass-card p-5 rounded-2xl space-y-4">
-          <div class="flex items-center justify-between border-b pb-3">
+        <!-- LOCKED ENROLLED GROUP BOARD (Persistent View for Joined Student/Admin) -->
+        <div id="active-group-container" class="hidden space-y-3">
+          <div class="glass-card p-4 rounded-2xl border-l-4 border-l-pink-500 flex items-center justify-between">
             <div>
-              <span class="text-[10px] font-bold tracking-wider text-pink-600 uppercase" id="group-role-badge">MEMBER</span>
-              <h4 class="font-extrabold text-base text-slate-800" id="group-name-display">Group Name</h4>
-              <p class="text-xs text-slate-500 font-mono" id="group-code-display">Code: 0000000000</p>
+              <span class="text-[9px] font-bold tracking-wider text-pink-600 uppercase" id="group-role-badge">STUDENT MEMBER</span>
+              <h4 class="font-bold text-sm text-slate-800" id="group-name-display">Group Name</h4>
+              <p class="text-[10px] text-slate-500 font-mono" id="group-code-display">Code: 0000000000</p>
             </div>
-            <button onclick="exitCurrentGroup()" class="text-xs text-red-500 hover:underline flex items-center gap-1 font-medium">
-              <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Exit
+            <button onclick="exitCurrentGroup()" class="text-xs text-red-500 hover:bg-red-50 p-2 rounded-xl flex items-center gap-1 font-semibold">
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Exit Group
             </button>
           </div>
 
-          <div class="grid grid-cols-2 gap-2">
-            <button onclick="openTasksPage()" class="py-2.5 px-3 rounded-xl bg-purple-600 text-white font-medium text-xs flex items-center justify-center gap-2 shadow-sm">
-              <i data-lucide="check-square" class="w-4 h-4"></i>
-              <span>Targets / Tasks</span>
+          <!-- Feature Action Cards Grid -->
+          <div class="grid grid-cols-2 gap-3">
+            <button onclick="openTasksPage()" class="p-3.5 rounded-2xl glass-card border flex items-center gap-3">
+              <div class="p-2 rounded-xl bg-purple-500 text-white"><i data-lucide="check-square" class="w-4 h-4"></i></div>
+              <div class="text-left"><span class="block font-bold text-xs">Daily Targets</span><span class="text-[9px] text-slate-400" id="badge-task-percent">0% Done</span></div>
             </button>
-            <button onclick="openChatPage()" class="py-2.5 px-3 rounded-xl bg-pink-600 text-white font-medium text-xs flex items-center justify-center gap-2 shadow-sm">
-              <i data-lucide="message-square" class="w-4 h-4"></i>
-              <span>Group Chat</span>
+
+            <button onclick="openChatPage()" class="p-3.5 rounded-2xl glass-card border flex items-center gap-3">
+              <div class="p-2 rounded-xl bg-pink-500 text-white"><i data-lucide="message-square" class="w-4 h-4"></i></div>
+              <div class="text-left"><span class="block font-bold text-xs">Discussion</span><span class="text-[9px] text-slate-400">Group Chat</span></div>
+            </button>
+
+            <button onclick="openReportPage()" class="p-3.5 rounded-2xl glass-card border flex items-center gap-3 col-span-2 bg-gradient-to-r from-purple-600/10 to-pink-600/10">
+              <div class="p-2 rounded-xl bg-slate-900 text-white"><i data-lucide="award" class="w-4 h-4"></i></div>
+              <div class="text-left"><span class="block font-bold text-xs">Nightly Performance Report</span><span class="text-[9px] text-slate-500">AI Daily Scorecard & Analytics</span></div>
             </button>
           </div>
 
-          <div id="admin-extra-actions" class="hidden space-y-2 pt-2 border-t">
-            <button onclick="openAdminAnalyticsPage()" class="w-full py-2.5 px-3 rounded-xl glass-card text-purple-700 font-semibold text-xs flex items-center justify-center gap-2">
-              <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-              <span>Admin Analytics & User Control</span>
-            </button>
-            <button onclick="openNotesSummarizerPage()" class="w-full py-2.5 px-3 rounded-xl glass-card text-pink-700 font-semibold text-xs flex items-center justify-center gap-2">
-              <i data-lucide="file-text" class="w-4 h-4"></i>
-              <span>Generate Mind Maps / Notes</span>
-            </button>
+          <!-- Group Members Overview -->
+          <div class="glass-card p-4 rounded-2xl space-y-3">
+            <div class="flex justify-between items-center border-b pb-2">
+              <h5 class="font-bold text-xs text-slate-700 uppercase">Group Roster & Members</h5>
+              <span class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full" id="member-count-badge">1 Active</span>
+            </div>
+            <div id="members-list-container" class="space-y-2 max-h-36 overflow-y-auto pr-1">
+              <!-- Member List Dynamic -->
+            </div>
           </div>
         </div>
       </main>
     </section>
 
-    <!-- 4. PAGE: TIMER (NEW PAGE) -->
-    <section id="view-timer" class="app-view flex-1 flex flex-col">
-      <header class="glass-nav p-4 flex items-center gap-3">
-        <button onclick="goBack()" class="p-2 rounded-xl glass-card text-slate-700"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
-        <h3 class="font-bold text-base text-slate-800">Study Timer & Tracker</h3>
+    <!-- 4. PAGE: TIMER -->
+    <section id="view-timer" class="app-view">
+      <header class="glass-nav p-4 flex items-center gap-3 shrink-0">
+        <button onclick="goBack()" class="p-2 rounded-xl glass-card"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+        <h3 class="font-bold text-sm text-slate-800">Study Timer & Stopwatch</h3>
       </header>
-      <div class="p-6 my-auto text-center space-y-8">
-        <div class="w-56 h-56 mx-auto rounded-full glass-card border-4 border-pink-400/30 flex items-center justify-center flex-col shadow-inner">
+      <div class="p-6 my-auto text-center space-y-8 flex-1 flex flex-col justify-center">
+        <div class="w-60 h-60 mx-auto rounded-full glass-card border-4 border-pink-400/30 flex items-center justify-center flex-col shadow-inner">
           <span id="timer-display" class="text-4xl font-extrabold font-mono text-slate-800">00:00:00</span>
-          <span class="text-xs text-slate-400 mt-1 font-medium">Focused Time</span>
+          <span class="text-xs text-pink-600 mt-1 font-semibold uppercase tracking-wider">Focus Mode Active</span>
         </div>
         <div class="flex items-center justify-center gap-4">
-          <button id="btn-timer-toggle" onclick="toggleTimer()" class="py-3.5 px-8 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold text-sm shadow-lg">Start</button>
+          <button id="btn-timer-toggle" onclick="toggleTimer()" class="py-3.5 px-8 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold text-sm shadow-lg">Start Focus</button>
           <button onclick="resetTimer()" class="py-3.5 px-6 rounded-2xl glass-card text-slate-600 font-bold text-sm">Reset</button>
         </div>
       </div>
     </section>
 
-    <!-- 5. PAGE: TASKS & TO-DO (NEW PAGE) -->
-    <section id="view-tasks" class="app-view flex-1 flex flex-col">
-      <header class="glass-nav p-4 flex items-center justify-between">
+    <!-- 5. PAGE: TASKS & REAL-TIME PERCENTAGE TRACKER -->
+    <section id="view-tasks" class="app-view">
+      <header class="glass-nav p-4 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-3">
-          <button onclick="goBack()" class="p-2 rounded-xl glass-card text-slate-700"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
-          <h3 class="font-bold text-base text-slate-800">Daily Targets & To-Do</h3>
+          <button onclick="goBack()" class="p-2 rounded-xl glass-card"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+          <h3 class="font-bold text-sm text-slate-800">Daily To-Do & Tasks</h3>
         </div>
-        <button id="btn-add-task" onclick="showAddTaskModal()" class="hidden p-2 rounded-xl bg-purple-600 text-white"><i data-lucide="plus" class="w-4 h-4"></i></button>
+        <button id="btn-add-task" onclick="showAddTaskModal()" class="p-2 rounded-xl bg-purple-600 text-white hidden"><i data-lucide="plus" class="w-4 h-4"></i></button>
       </header>
-      <div class="p-6 space-y-4 flex-1 overflow-y-auto" id="tasks-container">
-        <!-- Tasks will render here -->
+
+      <!-- Dynamic Progress Percentage Bar -->
+      <div class="px-4 pt-3 shrink-0">
+        <div class="glass-card p-3 rounded-xl space-y-1.5">
+          <div class="flex justify-between items-center text-xs font-bold">
+            <span class="text-slate-600">Task Completion Rate</span>
+            <span class="text-pink-600 font-mono" id="task-progress-text">0% Done</span>
+          </div>
+          <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div id="task-progress-bar" class="h-full bg-gradient-to-r from-purple-600 to-pink-500 transition-all duration-300 w-0"></div>
+          </div>
+        </div>
       </div>
-      <div id="admin-submit-day-bar" class="hidden p-4 glass-nav border-t">
-        <button onclick="submitTodaysData()" class="w-full py-3 rounded-xl bg-slate-900 text-white font-semibold text-xs flex items-center justify-center gap-2">
-          <i data-lucide="lock" class="w-4 h-4"></i>
-          <span>Submit Today's Data & Lock Day</span>
+
+      <div class="p-4 space-y-3 flex-1 overflow-y-auto" id="tasks-container">
+        <!-- Tasks rendered here dynamically -->
+      </div>
+
+      <!-- Admin Submit Night Record Action Bar -->
+      <div id="admin-submit-day-bar" class="hidden p-4 glass-nav border-t shrink-0">
+        <button onclick="submitTodaysDataAndReport()" class="w-full py-3 rounded-xl bg-slate-900 text-white font-semibold text-xs flex items-center justify-center gap-2">
+          <i data-lucide="send" class="w-4 h-4 text-pink-400"></i>
+          <span>Submit Today's Data & Broadcast Reports</span>
         </button>
       </div>
     </section>
 
-    <!-- 6. PAGE: USER ANALYTICS DETAILED VIEW (NEW PAGE) -->
-    <section id="view-user-analytics" class="app-view flex-1 flex flex-col">
-      <header class="glass-nav p-4 flex items-center gap-3">
-        <button onclick="goBack()" class="p-2 rounded-xl glass-card text-slate-700"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
-        <h3 class="font-bold text-base text-slate-800" id="analytics-user-name">Member History</h3>
+    <!-- 6. PAGE: NIGHTLY PERFORMANCE REPORT CARD -->
+    <section id="view-report" class="app-view">
+      <header class="glass-nav p-4 flex items-center gap-3 shrink-0">
+        <button onclick="goBack()" class="p-2 rounded-xl glass-card"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+        <h3 class="font-bold text-sm text-slate-800">Daily Performance Scorecard</h3>
       </header>
-      <div class="p-6 space-y-4">
-        <div class="glass-card p-5 rounded-2xl space-y-3">
-          <h4 class="font-bold text-sm text-slate-700 border-b pb-2">Study & App Watch Time Analytics</h4>
-          <div class="space-y-2 text-xs">
-            <div class="flex justify-between text-slate-600">
-              <span>Study Apps Usage:</span>
-              <span class="font-bold text-purple-600" id="analytics-study-app-time">3h 45m</span>
+      <div class="p-4 space-y-4 flex-1 overflow-y-auto">
+        <div class="glass-card p-5 rounded-3xl space-y-4 border-2 border-pink-500/30">
+          <div class="flex justify-between items-start border-b pb-3">
+            <div>
+              <span class="text-[10px] font-bold text-pink-600 uppercase tracking-wider block">OFFICIAL SCORECARD</span>
+              <h4 class="font-extrabold text-base text-slate-800" id="report-user-name">Rahul Kumar</h4>
+              <span class="text-[10px] text-slate-500 font-mono" id="report-goal-name">Target: NEET 2027</span>
             </div>
-            <div class="flex justify-between text-slate-600">
-              <span>Timer Record:</span>
-              <span class="font-bold text-pink-600" id="analytics-timer-time">4h 10m</span>
-            </div>
-            <div class="flex justify-between text-slate-600">
-              <span>Task Completion Rate:</span>
-              <span class="font-bold text-green-600" id="analytics-task-rate">85%</span>
+            <div class="px-3 py-1 bg-green-100 text-green-700 font-extrabold text-xs rounded-full" id="report-grade">
+              EXCELLENT
             </div>
           </div>
-        </div>
 
-        <!-- Privacy Controls for Admin -->
-        <div class="glass-card p-5 rounded-2xl space-y-3">
-          <h4 class="font-bold text-sm text-slate-700">Data Visibility Settings</h4>
-          <div class="flex items-center justify-between">
-            <span class="text-xs text-slate-600">Make Member Data Public to Group</span>
-            <input type="checkbox" id="toggle-data-privacy" class="w-4 h-4 accent-pink-600" onchange="toggleMemberPrivacy()"/>
+          <!-- Report Metrics Grid -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="p-3 bg-white/70 rounded-2xl border">
+              <span class="text-[9px] font-bold text-slate-400 uppercase block">Study Hours</span>
+              <span class="text-sm font-extrabold text-purple-700 font-mono" id="report-study-time">4h 30m</span>
+            </div>
+            <div class="p-3 bg-white/70 rounded-2xl border">
+              <span class="text-[9px] font-bold text-slate-400 uppercase block">Task Accuracy</span>
+              <span class="text-sm font-extrabold text-pink-600 font-mono" id="report-accuracy">100% Completed</span>
+            </div>
           </div>
+
+          <div class="p-4 bg-slate-900 text-white rounded-2xl space-y-2 text-xs">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400">Exam Proximity:</span>
+              <span class="font-mono text-pink-400 font-bold">NEET 2027 (~265 Days)</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400">Utilization Score:</span>
+              <span class="font-bold text-green-400">9.2 / 10</span>
+            </div>
+            <p class="text-[10px] text-slate-400 pt-2 border-t border-slate-800 leading-relaxed">
+              🔥 <strong>Admin Feedback:</strong> बेहतरीन प्रयास! आपने आज का सारा टारगेट समय पर पूरा किया है। इसी स्पीड को जारी रखें।
+            </p>
+          </div>
+
+          <button onclick="shareReportCard()" class="w-full py-3 rounded-xl bg-purple-600 text-white font-bold text-xs flex items-center justify-center gap-2">
+            <i data-lucide="share-2" class="w-4 h-4"></i>
+            <span>Share Report Card</span>
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- 7. PAGE: CHAT PAGE (NEW PAGE) -->
-    <section id="view-chat" class="app-view flex-1 flex flex-col">
-      <header class="glass-nav p-4 flex items-center gap-3">
-        <button onclick="goBack()" class="p-2 rounded-xl glass-card text-slate-700"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
-        <h3 class="font-bold text-base text-slate-800">Group Discussion</h3>
+    <!-- 7. PAGE: GROUP CHAT -->
+    <section id="view-chat" class="app-view">
+      <header class="glass-nav p-4 flex items-center gap-3 shrink-0">
+        <button onclick="goBack()" class="p-2 rounded-xl glass-card"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+        <h3 class="font-bold text-sm text-slate-800">Group Discussion</h3>
       </header>
       <div class="flex-1 p-4 overflow-y-auto space-y-3" id="chat-messages-container">
-        <!-- Messages render here -->
+        <!-- Messages Output -->
       </div>
-      <div class="p-3 glass-nav flex items-center gap-2">
-        <input type="text" id="input-chat-msg" placeholder="Write a message..." class="flex-1 px-4 py-2.5 rounded-xl border text-xs focus:outline-none bg-white/80"/>
+      <div class="p-3 glass-nav flex items-center gap-2 shrink-0">
+        <input type="text" id="input-chat-msg" placeholder="Type a message..." class="flex-1 px-4 py-2.5 rounded-xl border text-xs focus:outline-none bg-white/90"/>
         <button onclick="sendChatMessage()" class="p-2.5 rounded-xl bg-pink-600 text-white"><i data-lucide="send" class="w-4 h-4"></i></button>
       </div>
     </section>
 
-    <!-- 8. PAGE: NOTES & MIND-MAP ENGINE (NEW PAGE) -->
-    <section id="view-notes-summarizer" class="app-view flex-1 flex flex-col">
-      <header class="glass-nav p-4 flex items-center gap-3">
-        <button onclick="goBack()" class="p-2 rounded-xl glass-card text-slate-700"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
-        <h3 class="font-bold text-base text-slate-800">AI Notes & Mind-Maps</h3>
-      </header>
-      <div class="p-6 space-y-4 flex-1 overflow-y-auto">
-        <!-- Input Panel for Admin -->
-        <div id="admin-notes-creator" class="glass-card p-5 rounded-2xl space-y-3">
-          <h4 class="font-bold text-xs text-slate-700 uppercase">Create Short Notes / Mind-Map</h4>
-          <input type="text" id="input-note-title" placeholder="Topic Title (Ex. Photosynthesis)" class="w-full p-2.5 rounded-xl border text-xs"/>
-          <input type="text" id="input-yt-url" placeholder="YouTube Video URL or PDF Link (Optional)" class="w-full p-2.5 rounded-xl border text-xs"/>
-          <textarea id="input-note-content" placeholder="Paste Key Content / Notes Here..." class="w-full p-2.5 rounded-xl border text-xs h-20"></textarea>
-          <button onclick="generateAndPublishNote()" class="w-full py-2.5 rounded-xl bg-purple-600 text-white font-medium text-xs">Publish to Group</button>
-        </div>
-
-        <!-- Notes List -->
-        <div class="space-y-3" id="published-notes-list">
-          <!-- Published notes appear here -->
-        </div>
-      </div>
-    </section>
-
     <!-- PERMANENT BOTTOM BANNER AD CONTAINER -->
-    <div id="ad-banner-container" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/90 border-t border-slate-200 p-1.5 text-center text-[10px] text-slate-400 z-50">
-      <span>ADVERTISEMENT</span>
-      <div id="ad-slot-banner" class="h-10 flex items-center justify-center bg-slate-100 rounded text-slate-400 font-mono">
-        <!-- Ad Network Script injects here -->
-        Banner Ad Slot Active
+    <div id="ad-banner-container" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/90 border-t border-slate-200 p-1 text-center text-[9px] text-slate-400 z-40">
+      <span>SPONSORED AD</span>
+      <div id="ad-slot-banner" class="h-9 flex items-center justify-center bg-slate-100 rounded text-slate-400 font-mono">
+        Banner Ad Integration Active
       </div>
     </div>
 
   </div>
 
   <!-- MODALS -->
-  <!-- Modal: Create Group -->
   <div id="modal-create-group" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="glass-card w-full max-w-sm p-6 rounded-3xl space-y-4 bg-white">
       <h3 class="font-bold text-base text-slate-800">Create New Group</h3>
-      <input type="text" id="input-group-name" placeholder="Group Name (Ex. Physics Warriors)" class="w-full p-3 rounded-xl border text-xs"/>
+      <input type="text" id="input-group-name" placeholder="Group Name (Ex. NEET Warriors)" class="w-full p-3 rounded-xl border text-xs"/>
       <div class="flex gap-2">
         <button onclick="closeModals()" class="flex-1 py-2.5 rounded-xl border text-xs font-semibold">Cancel</button>
-        <button onclick="confirmCreateGroup()" class="flex-1 py-2.5 rounded-xl bg-purple-600 text-white text-xs font-semibold">Create</button>
+        <button onclick="confirmCreateGroup()" class="flex-1 py-2.5 rounded-xl bg-purple-600 text-white text-xs font-semibold">Create Group</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Join Group -->
   <div id="modal-join-group" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="glass-card w-full max-w-sm p-6 rounded-3xl space-y-4 bg-white">
       <h3 class="font-bold text-base text-slate-800">Join Group</h3>
       <input type="text" id="input-join-code" placeholder="Enter 10-Digit Group Code" class="w-full p-3 rounded-xl border text-xs font-mono"/>
       <div class="flex gap-2">
         <button onclick="closeModals()" class="flex-1 py-2.5 rounded-xl border text-xs font-semibold">Cancel</button>
-        <button onclick="confirmJoinGroup()" class="flex-1 py-2.5 rounded-xl bg-pink-600 text-white text-xs font-semibold">Join Now</button>
+        <button onclick="confirmJoinGroup()" class="flex-1 py-2.5 rounded-xl bg-pink-600 text-white text-xs font-semibold">Join Group</button>
       </div>
     </div>
   </div>
 
   <!-- SCRIPT ENGINE -->
   <script>
-    // State Store
     let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
-    let currentGroup = JSON.parse(localStorage.getItem('currentGroup')) || null;
+    let enrolledGroup = JSON.parse(localStorage.getItem('enrolledGroup')) || null;
+    let groupTasks = JSON.parse(localStorage.getItem('groupTasks')) || [
+      { id: 1, title: 'Solve 50 Physics PYQs (Mechanics)', completed: false },
+      { id: 2, title: 'Read Chemistry NCERT Organic Reactions', completed: false }
+    ];
     let navigationStack = ['view-landing'];
 
-    // Timer Logic
     let timerInterval = null;
     let timerSeconds = 0;
     let isTimerRunning = false;
@@ -384,7 +398,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       if (currentUser) {
-        if (currentGroup) {
+        if (enrolledGroup) {
           showView('view-dashboard');
         } else {
           showView('view-dashboard');
@@ -393,7 +407,6 @@
       }
     });
 
-    // Navigation Helper
     function showView(viewId) {
       document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
       const target = document.getElementById(viewId);
@@ -416,23 +429,22 @@
       }
     }
 
-    // Onboarding Handlers
     function handleStartStudying() {
-      if (!currentUser) {
-        showView('view-onboarding');
-      } else {
-        showView('view-dashboard');
-      }
+      if (!currentUser) showView('view-onboarding');
+      else showView('view-dashboard');
     }
 
     function registerUser() {
       const nameInput = document.getElementById('input-user-name').value.trim();
-      if (!nameInput) return alert('कृपया अपना नाम दर्ज करें!');
+      const goalInput = document.getElementById('select-user-goal').value;
+      if (!nameInput) return alert('कृपया नाम दर्ज करें!');
       
-      const uniqueId = 'NEET-' + Math.floor(1000 + Math.random() * 9000);
-      currentUser = { name: nameInput, id: uniqueId };
+      currentUser = { 
+        name: nameInput, 
+        goal: goalInput, 
+        id: 'NEET-' + Math.floor(1000 + Math.random() * 9000) 
+      };
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
-      
       updateUserUI();
       showView('view-dashboard');
     }
@@ -440,28 +452,77 @@
     function updateUserUI() {
       if (!currentUser) return;
       document.getElementById('display-user-name').innerText = currentUser.name;
-      document.getElementById('display-user-id').innerText = 'ID: ' + currentUser.id;
+      document.getElementById('display-user-goal').innerText = 'Goal: ' + currentUser.goal;
       document.getElementById('user-avatar').innerText = currentUser.name.charAt(0).toUpperCase();
 
-      if (currentGroup) {
-        document.getElementById('active-group-card').classList.remove('hidden');
-        document.getElementById('group-name-display').innerText = currentGroup.name;
-        document.getElementById('group-code-display').innerText = 'Code: ' + currentGroup.code;
-        document.getElementById('group-role-badge').innerText = currentGroup.isAdmin ? 'ADMIN / LEADER' : 'MEMBER';
-        
-        if (currentGroup.isAdmin) {
-          document.getElementById('admin-extra-actions').classList.remove('hidden');
+      if (enrolledGroup) {
+        document.getElementById('no-group-actions').classList.add('hidden');
+        document.getElementById('active-group-container').classList.remove('hidden');
+        document.getElementById('group-name-display').innerText = enrolledGroup.name;
+        document.getElementById('group-code-display').innerText = 'Code: ' + enrolledGroup.code;
+        document.getElementById('group-role-badge').innerText = enrolledGroup.isAdmin ? 'ADMIN / LEADER' : 'STUDENT MEMBER';
+
+        if (enrolledGroup.isAdmin) {
           document.getElementById('admin-submit-day-bar').classList.remove('hidden');
           document.getElementById('btn-add-task').classList.remove('hidden');
         } else {
-          document.getElementById('admin-extra-actions').classList.add('hidden');
           document.getElementById('admin-submit-day-bar').classList.add('hidden');
           document.getElementById('btn-add-task').classList.add('hidden');
         }
+
+        renderMembersList();
+        renderTasks();
+      } else {
+        document.getElementById('no-group-actions').classList.remove('hidden');
+        document.getElementById('active-group-container').classList.add('hidden');
       }
     }
 
-    // Group Handlers
+    function renderMembersList() {
+      const container = document.getElementById('members-list-container');
+      const members = enrolledGroup ? (enrolledGroup.members || [currentUser]) : [];
+      document.getElementById('member-count-badge').innerText = `${members.length} Members`;
+      
+      container.innerHTML = members.map(m => `
+        <div class="p-2.5 rounded-xl bg-white/80 border border-slate-100 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-xs">${m.name.charAt(0)}</div>
+            <span class="text-xs font-semibold text-slate-800">${m.name}</span>
+          </div>
+          <span class="text-[9px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Active</span>
+        </div>
+      `).join('');
+    }
+
+    function renderTasks() {
+      const container = document.getElementById('tasks-container');
+      let completedCount = 0;
+
+      container.innerHTML = groupTasks.map(t => {
+        if (t.completed) completedCount++;
+        return `
+          <div class="glass-card p-3.5 rounded-xl flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTask(${t.id})" class="w-5 h-5 accent-pink-600 rounded"/>
+              <span class="text-xs font-bold ${t.completed ? 'line-through text-slate-400' : 'text-slate-800'}">${t.title}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const percent = groupTasks.length > 0 ? Math.round((completedCount / groupTasks.length) * 100) : 0;
+      document.getElementById('task-progress-text').innerText = `${percent}% Done`;
+      document.getElementById('task-progress-bar').style.width = `${percent}%`;
+      document.getElementById('dash-daily-progress-percent').innerText = `${percent}% Completed`;
+      document.getElementById('badge-task-percent').innerText = `${percent}% Done`;
+    }
+
+    function toggleTask(id) {
+      groupTasks = groupTasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+      localStorage.setItem('groupTasks', JSON.stringify(groupTasks));
+      renderTasks();
+    }
+
     function showCreateGroupModal() { document.getElementById('modal-create-group').classList.replace('hidden', 'flex'); }
     function showJoinGroupModal() { document.getElementById('modal-join-group').classList.replace('hidden', 'flex'); }
     function closeModals() {
@@ -471,50 +532,65 @@
 
     function confirmCreateGroup() {
       const gName = document.getElementById('input-group-name').value.trim();
-      if (!gName) return alert('समूह का नाम आवश्यक है!');
+      if (!gName) return alert('ग्रुप का नाम दर्ज करें!');
       const gCode = Math.floor(1000000000 + Math.random() * 9000000000).toString();
       
-      currentGroup = { name: gName, code: gCode, isAdmin: true, members: [currentUser] };
-      localStorage.setItem('currentGroup', JSON.stringify(currentGroup));
+      enrolledGroup = { name: gName, code: gCode, isAdmin: true, members: [currentUser] };
+      localStorage.setItem('enrolledGroup', JSON.stringify(enrolledGroup));
       closeModals();
       updateUserUI();
     }
 
     function confirmJoinGroup() {
       const code = document.getElementById('input-join-code').value.trim();
-      if (code.length < 5) return alert('वैध 10-अंकों का कोड डालें!');
+      if (code.length < 5) return alert('वैध 10-अंकों का कोड दर्ज करें!');
       
-      currentGroup = { name: "Joined Group", code: code, isAdmin: false, members: [] };
-      localStorage.setItem('currentGroup', JSON.stringify(currentGroup));
+      enrolledGroup = { name: "Exam Aspirants Group", code: code, isAdmin: false, members: [currentUser] };
+      localStorage.setItem('enrolledGroup', JSON.stringify(enrolledGroup));
       closeModals();
       updateUserUI();
     }
 
     function exitCurrentGroup() {
-      if (confirm("क्या आप इस समूह से बाहर निकलना चाहते हैं?")) {
-        currentGroup = null;
-        localStorage.removeItem('currentGroup');
-        document.getElementById('active-group-card').classList.add('hidden');
+      if (confirm("क्या आप समूह से बाहर निकलना चाहते हैं?")) {
+        enrolledGroup = null;
+        localStorage.removeItem('enrolledGroup');
+        updateUserUI();
       }
     }
 
-    // Timer Controls
+    function submitTodaysDataAndReport() {
+      alert("Today's data submitted successfully! Performance Report Cards generated for all members.");
+      openReportPage();
+    }
+
     function openTimerPage() { showView('view-timer'); }
+    function openTasksPage() { showView('view-tasks'); renderTasks(); }
+    function openChatPage() { showView('view-chat'); }
+    function openReportPage() { 
+      if (currentUser) {
+        document.getElementById('report-user-name').innerText = currentUser.name;
+        document.getElementById('report-goal-name').innerText = 'Target: ' + currentUser.goal;
+      }
+      showView('view-report'); 
+    }
+
     function toggleTimer() {
       const btn = document.getElementById('btn-timer-toggle');
       if (!isTimerRunning) {
         isTimerRunning = true;
-        btn.innerText = "Pause";
+        btn.innerText = "Pause Focus";
         timerInterval = setInterval(() => {
           timerSeconds++;
           const hrs = String(Math.floor(timerSeconds / 3600)).padStart(2, '0');
           const mins = String(Math.floor((timerSeconds % 3600) / 60)).padStart(2, '0');
           const secs = String(timerSeconds % 60).padStart(2, '0');
           document.getElementById('timer-display').innerText = `${hrs}:${mins}:${secs}`;
+          document.getElementById('report-study-time').innerText = `${hrs}h ${mins}m`;
         }, 1000);
       } else {
         isTimerRunning = false;
-        btn.innerText = "Start";
+        btn.innerText = "Start Focus";
         clearInterval(timerInterval);
       }
     }
@@ -523,33 +599,24 @@
       clearInterval(timerInterval);
       timerSeconds = 0;
       document.getElementById('timer-display').innerText = "00:00:00";
-      document.getElementById('btn-timer-toggle').innerText = "Start";
+      document.getElementById('btn-timer-toggle').innerText = "Start Focus";
     }
 
-    // Pages Navigation
-    function openTasksPage() { showView('view-tasks'); renderTasks(); }
-    function openChatPage() { showView('view-chat'); }
-    function openAdminAnalyticsPage() { showView('view-user-analytics'); }
-    function openNotesSummarizerPage() { showView('view-notes-summarizer'); }
-
-    // Dummy Task Functions
-    function renderTasks() {
-      const container = document.getElementById('tasks-container');
-      container.innerHTML = `
-        <div class="glass-card p-4 rounded-xl flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <input type="checkbox" class="w-5 h-5 accent-pink-600 rounded"/>
-            <div>
-              <h5 class="font-bold text-xs text-slate-800">Solve 50 Physics PYQs (Mechanics)</h5>
-              <span class="text-[10px] text-slate-400">Target Time: 2 Hours</span>
-            </div>
-          </div>
+    function sendChatMessage() {
+      const msg = document.getElementById('input-chat-msg').value.trim();
+      if (!msg) return;
+      const container = document.getElementById('chat-messages-container');
+      container.innerHTML += `
+        <div class="p-3 glass-card rounded-2xl max-w-[80%] ml-auto text-xs bg-pink-500 text-white font-medium shadow-sm">
+          ${msg}
         </div>
       `;
+      document.getElementById('input-chat-msg').value = '';
     }
 
-    function downloadAPK() { alert("Downloading NEET Tracker APK..."); }
-    function addToHomeScreen() { alert("Add to Home Screen triggered."); }
+    function shareReportCard() {
+      alert("Scorecard link copied to clipboard to share with friends & parents!");
+    }
   </script>
 </body>
 </html>
